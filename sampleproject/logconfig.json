@@ -1,0 +1,15 @@
+{
+    "listeners": [
+        {
+            "name": "file",
+            "format": "{0}{1}{2}",
+            "listenerconfig": {
+                "fileName": "log.txt"
+            }
+        },
+        {
+            "name": "console",
+            "format": "{0}{2}"
+        }
+    ]
+}
