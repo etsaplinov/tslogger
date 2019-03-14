@@ -20,5 +20,9 @@
   "homepage": "https://github.com/etsaplinov/logger#readme",
   "devDependencies": {
     "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "@types/node": "^11.11.3",
+    "node": "^11.11.0"
   }
 }

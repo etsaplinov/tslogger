@@ -1,4 +1,4 @@
-import { LogKind, Logger, LogManager } from 'logger';
+import { LogKind, Logger, LogManager, LoggingEnvironment } from 'logger';
 
 LoggingEnvironment.Initialize();
 
