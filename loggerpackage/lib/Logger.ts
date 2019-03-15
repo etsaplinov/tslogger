@@ -1,16 +1,25 @@
 import { ILogger, LogKind } from "./ILogger";
 import { IWorkflowState } from "./IWorkflowState";
+import { LogListener } from "./LogListener";
+import { LogEventArgs } from "./LogEventArgs";
 
 export class Logger implements ILogger {
     constructor(name: string) {
         this.Name = name;
         this.Enable = true;
+        this.Parent = undefined;
     }
 
     Name: string;
     Enable: boolean;
+    Parent?: Logger;
 
+    public get Children(): Array<Logger> {
+        return this.m_Children;
+    }
 
+    private m_Listeners: Array<LogListener> = new Array<LogListener>();
+    private m_Children: Array<Logger> = new Array<Logger>();
 
 
     DebugEx(ex: IWorkflowState) {
@@ -103,40 +112,59 @@ export class Logger implements ILogger {
     ExceptionDebug(failedTask: string, ex: Error, includeInnerExceptions: boolean) {
         throw new Error("Not implement");
     }
-    AddListener(listener: import("./LogListener").LogListener) {
-        throw new Error("Not implement");
+    AddListener(listener: LogListener) {
+
+
+        if (listener == null)
+            return;
+
+        if (this.m_Listeners.indexOf(listener) == -1) {
+            this.m_Listeners.push(listener);
+            // tell the listener it has a new source, so that it
+            // can remove itself in case it gets disposed before
+            // the logger.
+            if (listener.Sources.indexOf(this) == -1)
+                listener.Sources.push(this);
+        }
+
+
     }
-    RemoveListener(listener: import("./LogListener").LogListener) {
-        throw new Error("Not implement");
+    RemoveListener(listener: LogListener) {
+        if (listener == null)
+            return;
+
+        let listenerIndex = this.m_Listeners.indexOf(listener);
+        if (listenerIndex > -1) {
+            this.m_Listeners.splice(listenerIndex, 1);
+            this.m_Listeners.splice(listenerIndex, 1);
+
+            let sourceIndex = listener.Sources.indexOf(this);
+            listener.Sources.splice(sourceIndex, 1);
+        }
     }
 
     AddChild(child: Logger) {
-        // if (child == null)
-        //     throw new ArgumentNullException(child.ToString());
+        if (child == null)
+            throw new Error(typeof (child));
 
-        // if (child.Parent != null)
-        //     throw new ArgumentException("Parent logger may not be valid when adding a child logger to an logger instance");
+        if (child.Parent != null)
+            throw new Error("Parent logger may not be valid when adding a child logger to an logger instance");
 
-        // lock(m_Lock)
-        // {
-        //     // tell the new child who it belongs to
-        //     child.Parent = this;
-        //     // scan all existing children if there is a need to fiddle in a new parent
-        //     string tempParentName = child.Name + ".";
-        //     var tempChildren = new List<Logger>(Children);
-        //     foreach(var c in tempChildren)
-        //     {
-        //         if (c.Name.StartsWith(tempParentName, StringComparison.Ordinal)) {
-        //             // it's not a sibling... it's a child!
-        //             c.Parent = child;
-        //             child.m_Children.Add(c);
-        //             m_Children.Remove(c);
-        //         }
-        //     }
-
-        //     //finally adopt the new child
-        //     m_Children.Add(child);
-        // }
+        // tell the new child who it belongs to
+        child.Parent = this;
+        // scan all existing children if there is a need to fiddle in a new parent
+        let tempParentName: string = child.Name + ".";
+        let tempChildren: Array<Logger> = new Array<Logger>(...this.Children);
+        tempChildren.forEach((c) => {
+            if (c.Name.startsWith(tempParentName)) {
+                // it's not a sibling... it's a child!
+                c.Parent = child;
+                child.m_Children.push(c);
+                this.m_Children.splice(0, 1);
+            }
+        })
+        //finally adopt the new child
+        this.m_Children.push(child);
     }
 
     Log(msg: string, storeType: string) {
@@ -147,7 +175,39 @@ export class Logger implements ILogger {
     };
 
     private LogPrivate(kind: LogKind, exception: Error | undefined, format: string, args?: any[]) {
-        console.log(this.Format(format, args));
+        if (this.Enable == false)
+            return;
+
+        let timestamp = new Date();
+        let le: LogEventArgs;
+
+        if ((args == null) || (args.length > 0)) {
+            le = new LogEventArgs(this.Name, exception, kind, timestamp,
+                this.Format(format, args));
+        }
+        else
+            le = new LogEventArgs(this.Name, exception, kind, timestamp, format);
+
+        this.NotifyListeners(le);
+    }
+
+
+    private NotifyListeners(msg: LogEventArgs) {
+        if (msg == null)
+            return;
+
+        if (msg.Message == null)
+            return;
+
+        if (this.Enable == true) {
+            this.m_Listeners.forEach((listener) => {
+                if (listener != null)
+                    listener.AppendToLog(msg);
+            })
+        }
+
+        if (this.Parent != null)
+            this.Parent.NotifyListeners(msg);
     }
 
     private Format(formatString: string, args?: any[]) {

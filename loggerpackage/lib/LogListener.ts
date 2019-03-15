@@ -17,7 +17,7 @@ export abstract class LogListener {
         }
     }
 
-    abstract AppendMessage: (message: LogEventArgs) => void;
+    abstract AppendMessage(message: LogEventArgs): void;
 
 
     get Filter(): LogFilter | undefined {
@@ -30,7 +30,7 @@ export abstract class LogListener {
 
 
 
-    public get Sources(): Array<Logger> {
+    get Sources(): Array<Logger> {
         return this.m_Sources;
     }
 

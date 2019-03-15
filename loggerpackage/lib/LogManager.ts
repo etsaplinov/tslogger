@@ -4,7 +4,7 @@ import { ILogger } from "./ILogger";
 export class LogManager {
     private static logger: ILogger;
 
-    public static LoggerNameSystem: string = "System";
+    public static LoggerNameSystem: string = "root";
 
     private static s_Loggers: { [name: string]: Logger } = {};
     private static s_Root: Logger = new Logger(LogManager.LoggerNameSystem);

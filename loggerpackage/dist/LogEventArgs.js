@@ -18,3 +18,4 @@ var LogEventArgs = /** @class */ (function () {
     return LogEventArgs;
 }());
 exports.LogEventArgs = LogEventArgs;
+//# sourceMappingURL=LogEventArgs.js.map

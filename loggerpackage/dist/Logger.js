@@ -1,11 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ILogger_1 = require("./ILogger");
+var LogEventArgs_1 = require("./LogEventArgs");
 var Logger = /** @class */ (function () {
     function Logger(name) {
+        this.m_Listeners = new Array();
+        this.m_Children = new Array();
         this.Name = name;
         this.Enable = true;
+        this.Parent = undefined;
     }
+    Object.defineProperty(Logger.prototype, "Children", {
+        get: function () {
+            return this.m_Children;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Logger.prototype.DebugEx = function (ex) {
         var _this = this;
         if (ex == undefined)
@@ -80,35 +91,49 @@ var Logger = /** @class */ (function () {
         throw new Error("Not implement");
     };
     Logger.prototype.AddListener = function (listener) {
-        throw new Error("Not implement");
+        if (listener == null)
+            return;
+        if (this.m_Listeners.indexOf(listener) == -1) {
+            this.m_Listeners.push(listener);
+            // tell the listener it has a new source, so that it
+            // can remove itself in case it gets disposed before
+            // the logger.
+            if (listener.Sources.indexOf(this) == -1)
+                listener.Sources.push(this);
+        }
     };
     Logger.prototype.RemoveListener = function (listener) {
-        throw new Error("Not implement");
+        if (listener == null)
+            return;
+        var listenerIndex = this.m_Listeners.indexOf(listener);
+        if (listenerIndex > -1) {
+            this.m_Listeners.splice(listenerIndex, 1);
+            this.m_Listeners.splice(listenerIndex, 1);
+            var sourceIndex = listener.Sources.indexOf(this);
+            listener.Sources.splice(sourceIndex, 1);
+        }
     };
     Logger.prototype.AddChild = function (child) {
-        // if (child == null)
-        //     throw new ArgumentNullException(child.ToString());
-        // if (child.Parent != null)
-        //     throw new ArgumentException("Parent logger may not be valid when adding a child logger to an logger instance");
-        // lock(m_Lock)
-        // {
-        //     // tell the new child who it belongs to
-        //     child.Parent = this;
-        //     // scan all existing children if there is a need to fiddle in a new parent
-        //     string tempParentName = child.Name + ".";
-        //     var tempChildren = new List<Logger>(Children);
-        //     foreach(var c in tempChildren)
-        //     {
-        //         if (c.Name.StartsWith(tempParentName, StringComparison.Ordinal)) {
-        //             // it's not a sibling... it's a child!
-        //             c.Parent = child;
-        //             child.m_Children.Add(c);
-        //             m_Children.Remove(c);
-        //         }
-        //     }
-        //     //finally adopt the new child
-        //     m_Children.Add(child);
-        // }
+        var _this = this;
+        if (child == null)
+            throw new Error(typeof (child));
+        if (child.Parent != null)
+            throw new Error("Parent logger may not be valid when adding a child logger to an logger instance");
+        // tell the new child who it belongs to
+        child.Parent = this;
+        // scan all existing children if there is a need to fiddle in a new parent
+        var tempParentName = child.Name + ".";
+        var tempChildren = new (Array.bind.apply(Array, [void 0].concat(this.Children)))();
+        tempChildren.forEach(function (c) {
+            if (c.Name.startsWith(tempParentName)) {
+                // it's not a sibling... it's a child!
+                c.Parent = child;
+                child.m_Children.push(c);
+                _this.m_Children.splice(0, 1);
+            }
+        });
+        //finally adopt the new child
+        this.m_Children.push(child);
     };
     Logger.prototype.Log = function (msg, storeType) {
         if (storeType != null && storeType == "portal")
@@ -118,7 +143,30 @@ var Logger = /** @class */ (function () {
     };
     ;
     Logger.prototype.LogPrivate = function (kind, exception, format, args) {
-        console.log(this.Format(format, args));
+        if (this.Enable == false)
+            return;
+        var timestamp = new Date();
+        var le;
+        if ((args == null) || (args.length > 0)) {
+            le = new LogEventArgs_1.LogEventArgs(this.Name, exception, kind, timestamp, this.Format(format, args));
+        }
+        else
+            le = new LogEventArgs_1.LogEventArgs(this.Name, exception, kind, timestamp, format);
+        this.NotifyListeners(le);
+    };
+    Logger.prototype.NotifyListeners = function (msg) {
+        if (msg == null)
+            return;
+        if (msg.Message == null)
+            return;
+        if (this.Enable == true) {
+            this.m_Listeners.forEach(function (listener) {
+                if (listener != null)
+                    listener.AppendToLog(msg);
+            });
+        }
+        if (this.Parent != null)
+            this.Parent.NotifyListeners(msg);
     };
     Logger.prototype.Format = function (formatString, args) {
         args = args || [];
@@ -130,3 +178,4 @@ var Logger = /** @class */ (function () {
     return Logger;
 }());
 exports.Logger = Logger;
+//# sourceMappingURL=Logger.js.map

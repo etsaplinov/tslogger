@@ -9,3 +9,4 @@ var ErrorEntry = /** @class */ (function () {
     return ErrorEntry;
 }());
 exports.ErrorEntry = ErrorEntry;
+//# sourceMappingURL=IWorkflowState.js.map

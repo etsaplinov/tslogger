@@ -2,7 +2,7 @@ import { LogKind } from ".";
 
 export class LogEventArgs {
 
-    constructor(origin: string, ex: Error, kind: LogKind, timestamp: Date, message: String) {
+    constructor(origin: string, ex: Error | undefined, kind: LogKind, timestamp: Date, message: String) {
         this.Origin = origin;
         this.Kind = kind;
         this.Timestamp = timestamp;
@@ -22,5 +22,5 @@ export class LogEventArgs {
     Origin: string;
     Kind: LogKind;
     Message: string;
-    Exception: Error;
+    Exception: Error | undefined;
 }

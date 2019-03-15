@@ -34,3 +34,4 @@ var LogListener = /** @class */ (function () {
     return LogListener;
 }());
 exports.LogListener = LogListener;
+//# sourceMappingURL=LogListener.js.map

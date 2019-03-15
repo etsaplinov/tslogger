@@ -1,0 +1,1 @@
+{"version":3,"file":"IWorkflowState.js","sourceRoot":"","sources":["../lib/IWorkflowState.ts"],"names":[],"mappings":";;AAcA;IAEI,oBAAY,WAAmB,EAAE,IAAY,EAAE,OAAe;QAC1D,IAAI,CAAC,WAAW,GAAG,WAAW,CAAC;QAC/B,IAAI,CAAC,QAAQ,GAAG,IAAI,CAAC;QACrB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IAE3B,CAAC;IAML,iBAAC;AAAD,CAAC,AAbD,IAaC;AAbY,gCAAU"}

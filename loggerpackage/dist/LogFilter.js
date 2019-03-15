@@ -18,3 +18,4 @@ var LogFilter = /** @class */ (function () {
     return LogFilter;
 }());
 exports.LogFilter = LogFilter;
+//# sourceMappingURL=LogFilter.js.map

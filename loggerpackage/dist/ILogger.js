@@ -8,3 +8,4 @@ var LogKind;
     LogKind[LogKind["Error"] = 3] = "Error";
     LogKind[LogKind["Fatal"] = 4] = "Fatal";
 })(LogKind = exports.LogKind || (exports.LogKind = {}));
+//# sourceMappingURL=ILogger.js.map

@@ -1,15 +1,32 @@
 {
-    "listeners": [
+    "Listeners": [
         {
-            "name": "file",
-            "format": "{0}{1}{2}",
-            "listenerconfig": {
+            "Name": "file",
+            "Type": "LogFile",
+            "Format": "{0}{1}{2}",
+            "ListenerConfig": {
                 "fileName": "log.txt"
             }
         },
         {
             "name": "console",
+            "type": "LogConsole",
             "format": "{0}{2}"
+        }
+    ],
+    "Loggers": [
+        {
+            "Name": "root",
+            "Listeners": [
+                "file",
+                "console"
+            ]
+        },
+        {
+            "Name": "root.testlogger",
+            "Listeners": [
+                "file"
+            ]
         }
     ]
 }

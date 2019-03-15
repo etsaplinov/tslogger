@@ -7,3 +7,5 @@ __export(require("./ILogger"));
 __export(require("./Logger"));
 __export(require("./LogManager"));
 __export(require("./LoggingEnvironment"));
+__export(require("./LogListener"));
+//# sourceMappingURL=index.js.map

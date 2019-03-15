@@ -54,9 +54,10 @@ var LogManager = /** @class */ (function () {
         if (parent == undefined && LogManager.s_Root != undefined)
             LogManager.s_Root.AddChild(log);
     };
-    LogManager.LoggerNameSystem = "System";
+    LogManager.LoggerNameSystem = "root";
     LogManager.s_Loggers = {};
     LogManager.s_Root = new Logger_1.Logger(LogManager.LoggerNameSystem);
     return LogManager;
 }());
 exports.LogManager = LogManager;
+//# sourceMappingURL=LogManager.js.map
