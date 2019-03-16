@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^4.16.1",
-    "express": "^4.16.4",
+    "axios": "^0.18.0",
     "logger": "file:../loggerpackage"
   }
 }

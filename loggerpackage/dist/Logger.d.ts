@@ -17,10 +17,10 @@ export declare class Logger implements ILogger {
     Warning(format: string, args: string[]): void;
     ErrorEx(ex: IWorkflowState): void;
     Error(format: string, args: string[]): void;
-    ExceptionEx(ex: Error, includeInnerExceptions: boolean): void;
-    Exception(failedTask: string, ex: Error, includeInnerExceptions: boolean): void;
-    ExceptionDebugEx(ex: Error, includeInnerExceptions: boolean): void;
-    ExceptionDebug(failedTask: string, ex: Error, includeInnerExceptions: boolean): void;
+    ExceptionEx(ex: Error): void;
+    Exception(failedTask: string, ex: Error): void;
+    ExceptionDebugEx(ex: Error): void;
+    ExceptionDebug(failedTask: string, ex: Error): void;
     AddListener(listener: LogListener): void;
     RemoveListener(listener: LogListener): void;
     AddChild(child: Logger): void;

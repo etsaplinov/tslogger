@@ -44,38 +44,38 @@ export class LoggingEnvironment implements ILoggingEnvironment {
     }
 
     private ConfigureLogging() {
-        let rootLogger = LogManager.GetLogger();
-        let configPath = path.resolve("d:\\", 'logconfigs.json');
+        let configPath = path.resolve(process.cwd(), 'logconfigs.json');
         //check config exists
         let configs: LoggingConfig | undefined = undefined;
         if (fs.existsSync(configPath)) {
             configs = JSON.parse(fs.readFileSync(configPath, 'utf8'));
         }
 
-        // let listeners: Array<LogListener> = [];
         let listeners: { [name: string]: LogListener } = {};
-        if (configs != undefined && configs.Listeners != null) {
-            configs.Listeners.forEach(listenerInfo => {
-                let listener: any = new LoggingEnvironment._Store[listenerInfo.Type](listenerInfo.ListenerConfig);
-                if (listener != null)
-                    listeners[listenerInfo.Name] = listener;
-
-            });
-        }
-
-        if (configs != undefined && configs.Loggers != null) {
-            configs.Loggers.forEach(loggerInfo => {
-                let logger = LogManager.GetLogger(loggerInfo.Name);
-                loggerInfo.Listeners.forEach((listenerName) => {
-                    let listener = listeners[listenerName];
+        if (configs != undefined) {
+            if (configs.Listeners != null) {
+                configs.Listeners.forEach(listenerInfo => {
+                    let listener: any = new LoggingEnvironment._Store[listenerInfo.Type](listenerInfo.ListenerConfig);
                     if (listener != null)
-                        logger.AddListener(listener);
+                        listeners[listenerInfo.Name] = listener;
+
                 });
-            });
+            }
+
+            if (configs.Loggers != null) {
+                configs.Loggers.forEach(loggerInfo => {
+                    let logger = LogManager.GetLogger(loggerInfo.Name);
+                    loggerInfo.Listeners.forEach((listenerName) => {
+                        let listener = listeners[listenerName];
+                        if (listener != null)
+                            logger.AddListener(listener);
+                    });
+                });
+            }
         }
-
-
-        // rootLogger.AddListener(new LogConsole());
-        // rootLogger.AddListener(new LogFile(path.resolve("d:\\", 'logs.txt')));
+        else {
+            let rootLogger = LogManager.GetLogger();
+            rootLogger.AddListener(new LogConsole());
+        }
     }
 }

@@ -47,4 +47,4 @@ var LogSlack = /** @class */ (function (_super) {
     return LogSlack;
 }(logger_1.LogListener));
 exports.LogSlack = LogSlack;
-//# sourceMappingURL=SlackLog.js.map
+//# sourceMappingURL=LogSlack.js.map

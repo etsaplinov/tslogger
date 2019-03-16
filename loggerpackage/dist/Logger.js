@@ -78,17 +78,33 @@ var Logger = /** @class */ (function () {
         this.LogPrivate(ILogger_1.LogKind.Error, undefined, format, args);
     };
     ;
-    Logger.prototype.ExceptionEx = function (ex, includeInnerExceptions) {
-        throw new Error("Not implement");
+    Logger.prototype.ExceptionEx = function (ex) {
+        this.Exception("", ex);
     };
-    Logger.prototype.Exception = function (failedTask, ex, includeInnerExceptions) {
-        throw new Error("Not implement");
+    Logger.prototype.Exception = function (failedTask, ex) {
+        if (ex == null)
+            return;
+        var message = "";
+        if (failedTask != null)
+            message += failedTask;
+        var originalException = ex;
+        message += ex.message;
+        message += ex.stack;
+        this.LogPrivate(ILogger_1.LogKind.Fatal, originalException, message.trim());
     };
-    Logger.prototype.ExceptionDebugEx = function (ex, includeInnerExceptions) {
-        throw new Error("Not implement");
+    Logger.prototype.ExceptionDebugEx = function (ex) {
+        this.ExceptionDebug("", ex);
     };
-    Logger.prototype.ExceptionDebug = function (failedTask, ex, includeInnerExceptions) {
-        throw new Error("Not implement");
+    Logger.prototype.ExceptionDebug = function (failedTask, ex) {
+        if (ex == null)
+            return;
+        var message = "";
+        if (failedTask != null)
+            message += failedTask;
+        var originalException = ex;
+        message += ex.message;
+        message += ex.stack;
+        this.LogPrivate(ILogger_1.LogKind.Debug, originalException, message.trim());
     };
     Logger.prototype.AddListener = function (listener) {
         if (listener == null)

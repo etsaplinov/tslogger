@@ -1,5 +1,5 @@
 import { LogKind, Logger, LogManager, LoggingEnvironment } from 'logger';
-import { LogSlack } from './dist/SlackLog';
+import { LogSlack } from './LogSlack';
 
 LoggingEnvironment.Initialize({
     LogSlack

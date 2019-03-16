@@ -45,7 +45,7 @@ var LoggingEnvironment = /** @class */ (function () {
     };
     LoggingEnvironment.prototype.ConfigureLogging = function () {
         var rootLogger = _1.LogManager.GetLogger();
-        var configPath = path.resolve("d:\\", 'logconfigs.json');
+        var configPath = path.resolve(process.cwd(), 'logconfigs.json');
         //check config exists
         var configs = undefined;
         if (fs.existsSync(configPath)) {
@@ -70,8 +70,6 @@ var LoggingEnvironment = /** @class */ (function () {
                 });
             });
         }
-        // rootLogger.AddListener(new LogConsole());
-        // rootLogger.AddListener(new LogFile(path.resolve("d:\\", 'logs.txt')));
     };
     LoggingEnvironment.ConfigFilename = "logconfig.json";
     LoggingEnvironment._Store = {

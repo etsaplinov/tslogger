@@ -99,19 +99,47 @@ export class Logger implements ILogger {
     };
 
 
-    ExceptionEx(ex: Error, includeInnerExceptions: boolean) {
-        throw new Error("Not implement");
-    }
-    Exception(failedTask: string, ex: Error, includeInnerExceptions: boolean) {
-        throw new Error("Not implement");
+    ExceptionEx(ex: Error) {
+        this.Exception("", ex);
     }
 
-    ExceptionDebugEx(ex: Error, includeInnerExceptions: boolean) {
-        throw new Error("Not implement");
+    Exception(failedTask: string, ex: Error) {
+        if (ex == null)
+            return;
+
+        let message = "";
+
+        if (failedTask != null)
+            message += failedTask;
+
+        var originalException = ex;
+        message += ex.message
+        message += ex.stack
+
+
+        this.LogPrivate(LogKind.Fatal, originalException, message.trim());
     }
-    ExceptionDebug(failedTask: string, ex: Error, includeInnerExceptions: boolean) {
-        throw new Error("Not implement");
+
+    ExceptionDebugEx(ex: Error) {
+        this.ExceptionDebug("", ex);
     }
+    ExceptionDebug(failedTask: string, ex: Error) {
+        if (ex == null)
+            return;
+
+        let message = "";
+
+        if (failedTask != null)
+            message += failedTask;
+
+        var originalException = ex;
+        message += ex.message
+        message += ex.stack
+
+
+        this.LogPrivate(LogKind.Debug, originalException, message.trim());
+    }
+    
     AddListener(listener: LogListener) {
 
 

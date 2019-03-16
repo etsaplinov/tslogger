@@ -1,0 +1,49 @@
+{
+    "Listeners": [
+        {
+            "Name": "file",
+            "Type": "LogFile",
+            "Format": "{0}{1}{2}",
+            "ListenerConfig": {
+                "fileName": "log2.txt"
+            }
+        },
+        {
+            "Name": "rootfile",
+            "Type": "LogFile",
+            "Format": "{0}{1}{2}",
+            "ListenerConfig": {
+                "fileName": "log_all.txt"
+            }
+        },
+        {
+            "Name": "console",
+            "Type": "LogConsole",
+            "Format": "{0}{2}"
+        },
+        {
+        	"Name": "slacktest",
+        	"Type": "LogSlack",
+        	"ListenerConfig": {
+        		"hookUrl": "https://hooks.slack.com/services/*"
+        	}
+        }
+    ],
+    "Loggers": [
+        {
+            "Name": "root",
+            "Listeners": [
+                "console",
+                "rootfile",
+                "slacktest"
+            ]
+        },
+        {
+            "Name": "root.testlogger",
+            "Listeners": [
+                "file",
+                "console"
+            ]
+        }
+    ]
+}

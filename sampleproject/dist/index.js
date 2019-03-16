@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var logger_1 = require("logger");
-var SlackLog_1 = require("./dist/SlackLog");
+var LogSlack_1 = require("./LogSlack");
 logger_1.LoggingEnvironment.Initialize({
-    LogSlack: SlackLog_1.LogSlack
+    LogSlack: LogSlack_1.LogSlack
 });
 function testLog(message) {
     var logger = logger_1.LogManager.GetLogger();

@@ -2,7 +2,6 @@ import { LogListener } from "./LogListener";
 import { LogEventArgs } from "./LogEventArgs";
 import { LogKind } from "./ILogger";
 import * as fs from 'fs';
-import * as path from 'path';
 
 export class LogFile extends LogListener {
     constructor(configs: any) {

@@ -1,0 +1,72 @@
+Project description. 
+
+Repository have two projects. Logger package and Demo app (sampleproject). 
+For start you need execute in root folder sampleproject npm i (of course you need installed nodejs), than npm run build. It's was build TypeScript project.
+For execute demo code you need:
+node .\dist\index.js
+or just F5 in VS Code (launch.json is configured)
+
+Files
+
+ILogger, ILoggingEnvironment, IWorkflowState - it's interfaces for basic functionality
+
+LogListener - base abstract class for basic listeners and for custom listeners
+
+LogFile, LogConsole - basic listeners, which implemented LogListener
+
+LogManager - class with static methods. Provide Loggers
+
+WorkflowState - it's not used in .net project. In TypeScript project not used too, but implemented. 	
+
+LogFilter - filters for configure logger. Not used, but implemented
+
+LogIventArgs - support class with arguments interfaces
+
+Loger - implementation of ILogger (main class like a LogListener)
+
+LoggingEnvirinment - basic initialize functionality
+
+
+How it works. 
+
+Before using logger in App you are need execute LoggingEnvironment.Initialize();
+It's create root logger with console listener if config file was not found or create loggers and listeners which configured in logconfigs.json file. 
+
+For implement possibility creating custom listeners i was extend method LoggingEnvironment.Initialize with parameter store. Its parameter for pass LogInvironment namespace with custom loggers. 
+For example 
+LoggingEnvironment.Initialize({
+    LogSlack
+});
+its added LogSlack class name to list of log listeners and then it will be possible configure in config file. 
+
+
+About config file.
+System finding config file with name logconfigs.json in root folder, then read and convert it to object with type LoggingConfig. You are can will see interfaces in file LogConfig. 
+Warning! Use CamelCase in config file like in LoggingConfig interfaces
+
+In file exists two arrays. Listeners and Loggers. 
+Listeners is a listeners list. Each listener write log to some place. 
+Loggers is a loggers list. Logger can using many listeners from Listeners list. 
+
+In demo project configured 2 loggers and 4 listeners.
+1) Listener LogFile who write to file
+2) Listener LogFile who write to another file.
+3) Listener LogConsole who write logs to console. 
+4) Listener LogSlack who write logs to slack. 
+
+1)Logger "root". Basic root logger. Write all messages to listeners, which was set in Listeners array field.
+1)Logger "root.testlogger". Test logger. Write his messages to listeners, which was set in Listeners array field.
+
+In Listeners each listener must have unique name. This name using in Logger->Listeners list
+If need set additional info to Listener you need set ListenerConfig field. 
+
+Write custom LogListener. 
+
+You need implement LogListener abstact class. 
+example:  class LogSlack extends LogListener (see it in LogSlack file)
+Then you need pass his name to LoggingEnvironment.Initialize and configure in config file. 
+
+
+
+
+
